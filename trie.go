@@ -1,21 +1,21 @@
 package trie
 
-type CharNode struct {
+type charNode struct {
 	c           string
 	exist       bool
-	childrenMap map[string]*CharNode
+	childrenMap map[string]*charNode
 }
 
 type Trie struct {
-	root *CharNode
+	root *charNode
 }
 
-// makeCharNode returns CharNode of given character.
-func makeCharNode(s string) CharNode {
-	return CharNode{
+// makeCharNode returns charNode of given character.
+func makeCharNode(s string) charNode {
+	return charNode{
 		c:           s,
 		exist:       false,
-		childrenMap: make(map[string]*CharNode),
+		childrenMap: make(map[string]*charNode),
 	}
 }
 
@@ -34,7 +34,6 @@ func (t *Trie) AddWord(word string) {
 	for i := 0; i < len(word); i++ {
 		w := string(word[i])
 		if v, ok := parent.childrenMap[w]; ok { // if given character's node already exists
-			// var node *CharNode
 			if v.c == w {
 				// If the character is the last of the word.
 				if i == len(word)-1 {
@@ -74,11 +73,14 @@ func (t *Trie) has(word string) bool {
 }
 
 // wordsTraverse returns existing words under the given node with adding preffix.
-func wordsTraverse(n *CharNode, pre string) []string {
+func wordsTraverse(n *charNode, pre string) []string {
 	var words []string
 	for k, v := range n.childrenMap {
 		if v.exist {
 			words = append(words, pre+k)
+			if len(v.childrenMap) != 0 {
+				words = append(words, wordsTraverse(v, pre+k)...)
+			}
 		} else {
 			words = append(words, wordsTraverse(v, pre+k)...)
 		}
