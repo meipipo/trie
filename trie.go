@@ -72,7 +72,7 @@ func (t *Trie) has(word string) bool {
 	return true
 }
 
-// wordsTraverse returns existing words under the given node with adding preffix.
+// wordsTraverse returns existing words under the given node with adding prefix.
 func wordsTraverse(n *charNode, pre string) []string {
 	var words []string
 	for k, v := range n.childrenMap {
@@ -88,8 +88,8 @@ func wordsTraverse(n *charNode, pre string) []string {
 	return words
 }
 
-// WordsPreffix returns existing words with given preffix.
-func (t *Trie) WordsPreffix(pre string) []string {
+// WordsPrefix returns existing words with given prefix.
+func (t *Trie) WordsPrefix(pre string) []string {
 	var words []string
 	if t.has(pre) {
 		words = append(words, pre)

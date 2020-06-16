@@ -104,20 +104,3 @@ func TestTrie(t *testing.T) {
 	assert.Equal(t, firstNode2.exist, true)
 	assert.Equal(t, len(firstNode2.childrenMap), 0)
 }
-
-func TestPreffix(t *testing.T) {
-	tr := MakeTrie()
-	tr.AddWord("abc")
-	tr.AddWord("aba")
-	tr.AddWord("d")
-
-	assert.Contains(t, tr.WordsPreffix(""), "d")
-	assert.Contains(t, tr.WordsPreffix(""), "abc")
-	assert.Contains(t, tr.WordsPreffix(""), "abc")
-	assert.Contains(t, tr.WordsPreffix("a"), "abc")
-	assert.Contains(t, tr.WordsPreffix("a"), "aba")
-	assert.Contains(t, tr.WordsPreffix("ab"), "abc")
-	assert.Contains(t, tr.WordsPreffix("ab"), "aba")
-	assert.Contains(t, tr.WordsPreffix("abc"), "abc")
-	assert.Nil(t, tr.WordsPreffix("c"))
-}
