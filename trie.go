@@ -2,7 +2,7 @@ package trie
 
 type charNode struct {
 	c           string
-	exist       bool
+	accept      string
 	childrenMap map[string]*charNode
 }
 
@@ -14,7 +14,7 @@ type Trie struct {
 func makeCharNode(s string) charNode {
 	return charNode{
 		c:           s,
-		exist:       false,
+		accept:      "",
 		childrenMap: make(map[string]*charNode),
 	}
 }
@@ -37,7 +37,7 @@ func (t *Trie) AddWord(word string) {
 			if v.c == w {
 				// If the character is the last of the word.
 				if i == len(word)-1 {
-					v.exist = true
+					v.accept = word
 				}
 			}
 			// Traverse next.
@@ -46,7 +46,7 @@ func (t *Trie) AddWord(word string) {
 			// Make new node.
 			node := makeCharNode(w)
 			if i == len(word)-1 {
-				node.exist = true
+				node.accept = word
 			}
 			// Add new node to parent.
 			parent.childrenMap[w] = &node
@@ -63,7 +63,7 @@ func (t *Trie) has(word string) bool {
 		w := string(word[i])
 		if v, ok := n.childrenMap[w]; !ok {
 			return false
-		} else if i == len(word)-1 && !v.exist {
+		} else if i == len(word)-1 && v.accept == "" {
 			return false
 		} else {
 			n = v
@@ -73,16 +73,16 @@ func (t *Trie) has(word string) bool {
 }
 
 // wordsTraverse returns existing words under the given node with adding prefix.
-func wordsTraverse(n *charNode, pre string) []string {
+func wordsTraverse(n *charNode) []string {
 	var words []string
-	for k, v := range n.childrenMap {
-		if v.exist {
-			words = append(words, pre+k)
+	for _, v := range n.childrenMap {
+		if v.accept != "" {
+			words = append(words, v.accept)
 			if len(v.childrenMap) != 0 {
-				words = append(words, wordsTraverse(v, pre+k)...)
+				words = append(words, wordsTraverse(v)...)
 			}
 		} else {
-			words = append(words, wordsTraverse(v, pre+k)...)
+			words = append(words, wordsTraverse(v)...)
 		}
 	}
 	return words
@@ -106,6 +106,6 @@ func (t *Trie) WordsPrefix(pre string) []string {
 			}
 		}
 	}
-	words = append(words, wordsTraverse(n, pre)...)
+	words = append(words, wordsTraverse(n)...)
 	return words
 }
